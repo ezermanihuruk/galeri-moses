@@ -2,6 +2,7 @@ backend:
   name: github
   repo: ezermanihuruk/galeri-moses
   branch: main
+  base_url: https://decap-oauth.vercel.app # Server OAuth gratis untuk Decap CMS di Vercel
 
 media_folder: "images/uploads"
 public_folder: "/images/uploads"
