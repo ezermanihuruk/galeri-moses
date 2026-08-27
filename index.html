@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Galeri Moses</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" type="image/png" href="favicon.png">
+  <!-- Font Google Premium -->
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <!-- Netlify Identity Widget -->
+  <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <header class="navbar">
+    <div class="logo">GALERI MOSES</div>
+    <ul class="nav-links">
+      <li><a href="#home">Home</a></li>
+      <li><a href="#about">Tentang Saya</a></li>
+      <li><a href="#gallery">Galeri</a></li>
+      <li><a href="#contact">Contact Me</a></li>
+    </ul>
+  </header>
+
+  <!-- Hero Section -->
+  <section id="home" class="hero-photoology">
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+      <h1>Moses Juneri Manihuruk</h1>
+      <p class="hero-subtitle">Portofolio Fotografi Digital Profesional</p>
+    </div>
+    <!-- Floating Contact Button -->
+    <a href="#contact" class="floating-btn">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 9h12v2H6V9zm8 5H6v-2h8v2zm4-6H6V6h12v2z"/></svg>
+      Hubungi Kami...
+    </a>
+  </section>
+
+  <!-- Section About -->
+  <section id="about" class="section">
+    <div class="section-title">
+      <span>PROFIL FOTOGRAFER</span>
+      <h2>Tentang Saya</h2>
+    </div>
+    <div class="about-card">
+      <div class="about-img-wrapper">
+        <img src="images/aboutme.jpeg" alt="Moses Juneri Manihuruk">
+      </div>
+      <div class="about-text">
+        <p>Selamat datang di ruang karya visual saya.</p>
+        <br>
+        <p>Saya, Moses Juneri Manihuruk, menghadirkan fotografi sebagai cara untuk bercerita tentang momen, manusia, dan emosi yang sering kali hadir dalam kesederhanaan.</p>
+        <br>
+        <p>Bagi saya, setiap foto bukan sekadar gambar, tetapi sebuah cerita dan momen autentik yang dapat dikenang dalam ruang dan waktu.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section Gallery -->
+  <section id="gallery" class="section">
+    <div class="section-title">
+      <span>KARYA TERPILIH</span>
+      <h2>Galeri Foto</h2>
+    </div>
+
+    <!-- Category Filters -->
+    <div class="category-filter">
+      <button class="filter-btn active" onclick="filterCategory('all')">Semua</button>
+      <button class="filter-btn" onclick="filterCategory('Black and White')">Black &amp; White</button>
+      <button class="filter-btn" onclick="filterCategory('Stage')">Stage</button>
+      <button class="filter-btn" onclick="filterCategory('Sport')">Sport</button>
+      <button class="filter-btn" onclick="filterCategory('Human')">Human</button>
+      <button class="filter-btn" onclick="filterCategory('Event')">Event</button>
+      <button class="filter-btn" onclick="filterCategory('Arsitektur')">Arsitektur</button>
+    </div>
+
+    <!-- Gallery Grid -->
+    <div id="gallery-grid" class="gallery-grid">
+      <!-- Data foto otomatis di-render oleh script.js -->
+    </div>
+  </section>
+
+  <!-- Section Contact -->
+  <section id="contact" class="section">
+    <div class="section-title">
+      <span>MARI BEKERJA SAMA</span>
+      <h2>Contact Me</h2>
+    </div>
+    <div class="contact-card">
+      <div class="social-contact-wrapper">
+        <a href="https://wa.me/6281272683815" target="_blank" rel="noopener noreferrer" class="social-btn wa-btn">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
+          Chat via WhatsApp
+        </a>
+        <a href="https://instagram.com/mosesjuneri" target="_blank" rel="noopener noreferrer" class="social-btn ig-btn">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+          Follow Instagram
+        </a>
+      </div>
+
+      <div class="divider"><span>ATAU KIRIM PESAN</span></div>
+
+      <form class="contact-form" onsubmit="alert('Pesan terkirim!'); return false;">
+        <input type="text" placeholder="Nama Lengkap" required>
+        <input type="email" placeholder="Alamat Email" required>
+        <textarea rows="5" placeholder="Tuliskan pesan atau tawaran proyek..." required></textarea>
+        <button type="submit">KIRIM PESAN</button>
+      </form>
+    </div>
+  </section>
+
+  <!-- Modal Lightbox Pop-up -->
+  <div id="lightbox-modal" class="modal" onclick="closeModal()">
+    <span class="close-btn">&times;</span>
+    <img id="modal-img" class="modal-img" src="" alt="">
+    <div class="modal-caption">
+      <h3 id="modal-title"></h3>
+      <p id="modal-text"></p>
+    </div>
+  </div>
+
+  <!-- Footer Copyright -->
+  <footer class="footer">
+    <p>&copy; 2026 <strong>Galeri Moses</strong>. All Rights Reserved. Designed by Moses Juneri Manihuruk.</p>
+  </footer>
+
+  <!-- Script Netlify Identity Redirect (Penting untuk Login Admin) -->
+  <script>
+    if (window.netlifyIdentity) {
+      window.netlifyIdentity.on("init", user => {
+        if (!user) {
+          window.netlifyIdentity.on("login", () => {
+            document.location.href = "/admin/";
+          });
+        }
+      });
+    }
+  </script>
+  <script src="script.js"></script>
+</body>
+</html>
