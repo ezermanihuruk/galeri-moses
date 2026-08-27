@@ -1,124 +1,133 @@
-let galleryData = [];
+document.addEventListener("DOMContentLoaded", async () => {
+  const galleryGrid = document.querySelector(".gallery-grid") || document.querySelector(".portfolio-grid") || document.getElementById("gallery");
+  const filterButtons = document.querySelectorAll(".filter-btn");
 
-// Memuat data dari Decap CMS
-async function fetchGalleryData() {
-  const container = document.getElementById('gallery-grid');
-  
-  try {
-    const response = await fetch('/content/gallery/index.json'); 
-    if (response.ok) {
-      galleryData = await response.json();
-    } else {
-      // Fallback Data Bawaan jika belum ada upload via CMS
-      galleryData = [
-        {
-          title: "Energi Panggung Konser",
-          category: "Stage",
-          image: "images/Stage/1.jpeg",
-          caption: "Pencahayaan panggung dengan kontras warna tinggi."
-        },
-        {
-          title: "Karakter Wajah & Emosi",
-          category: "Human",
-          image: "images/Human/1.jpeg",
-          caption: "Potret ekspresi autentik pencahayaan dramatis."
-        },
-        {
-          title: "Bayangan & Siluet B&W",
-          category: "Black and White",
-          image: "images/Black%20and%20White/1.jpeg",
-          caption: "Eksplorasi kontras gelap terang klasik."
-        },
-        {
-          title: "Aksi Kecepatan Lapangan",
-          category: "Sport",
-          image: "images/Sport/1.jpeg",
-          caption: "Membekukan gerakan dalam momen presisi tinggi."
-        },
-        {
-          title: "Momen Perayaan",
-          category: "Event",
-          image: "images/Event/1.jpeg",
-          caption: "Dokumentasi suasana dan kegembiraan acara."
-        },
-        {
-          title: "Simetri Ruang & Bangunan",
-          category: "Arsitektur",
-          image: "images/Arsitektur/1.jpeg",
-          caption: "Eksplorasi garis dan struktur arsitektur."
-        }
-      ];
-    }
-    renderGallery(galleryData);
-  } catch (error) {
-    console.log("Menggunakan data bawaan awal...", error);
-    renderGallery(galleryData);
-  }
-}
+  // 1. Fungsi Render Kartu Foto ke Website
+  function renderCard(title, category, imageSrc, caption, isCMS = false) {
+    if (!galleryGrid) return;
 
-function renderGallery(items) {
-  const container = document.getElementById('gallery-grid');
-  if (!container) return;
-  
-  container.innerHTML = '';
+    // Normalisasi kelas kategori untuk filtering (misal: "Black and White" -> "black-and-white")
+    const categoryClass = category ? category.toLowerCase().trim().replace(/\s+/g, '-') : 'all';
 
-  items.forEach(item => {
-    const card = document.createElement('div');
-    card.className = 'gallery-card';
-    card.onclick = () => openModal(item.image, item.title, item.caption);
+    const card = document.createElement("div");
+    card.className = `gallery-item ${categoryClass}`;
+    card.setAttribute("data-category", categoryClass);
 
     card.innerHTML = `
-      <div class="img-wrapper">
-        <img src="${item.image}" alt="${item.title}">
-      </div>
-      <div class="gallery-info">
-        <h4>${item.title}</h4>
+      <div class="card-inner">
+        <img src="${imageSrc}" alt="${title}" loading="lazy">
+        <div class="overlay">
+          <span class="tag">${category}</span>
+          <h3>${title}</h3>
+          ${caption ? `<p>${caption}</p>` : ''}
+        </div>
       </div>
     `;
-    container.appendChild(card);
-  });
-}
 
-function filterCategory(category) {
-  const buttons = document.querySelectorAll('.filter-btn');
-  buttons.forEach(btn => {
-    const btnText = btn.innerText.toLowerCase();
-    const catText = category.toLowerCase();
-    
-    if(btnText === catText || (category === 'all' && btnText === 'semua') || (catText === 'black and white' && btnText === 'black & white')) {
-      btn.classList.add('active');
+    // Foto baru dari CMS ditaruh di paling awal, foto lama di belakang
+    if (isCMS) {
+      galleryGrid.prepend(card);
     } else {
-      btn.classList.remove('active');
+      galleryGrid.appendChild(card);
     }
-  });
 
-  if (category === 'all') {
-    renderGallery(galleryData);
-  } else {
-    const filtered = galleryData.filter(item => item.category.toLowerCase() === category.toLowerCase());
-    renderGallery(filtered);
+    // Tambahkan event click untuk Lightbox/Modal jika ada
+    card.addEventListener("click", () => openLightbox(imageSrc, title, category, caption));
   }
-}
 
-function openModal(src, title, caption) {
-  const modalImg = document.getElementById('modal-img');
-  const modalTitle = document.getElementById('modal-title');
-  const modalText = document.getElementById('modal-text');
-  const modal = document.getElementById('lightbox-modal');
+  // 2. Fungsi Membaca File Markdown Foto dari Decap CMS
+  async function loadCMSImages() {
+    try {
+      const response = await fetch("https://api.github.com/repos/ezermanihuruk/galeri-moses/contents/content/gallery");
+      if (!response.ok) return;
 
-  if (modalImg && modal) {
-    modalImg.src = src;
-    modalTitle.innerText = title || '';
-    modalText.innerText = caption || '';
-    modal.style.display = 'flex';
+      const files = await response.json();
+
+      for (const file of files) {
+        if (file.name.endsWith(".md")) {
+          const res = await fetch(file.download_url);
+          const text = await res.text();
+
+          // Parsing data Frontmatter (YAML) di dalam file Markdown
+          const parts = text.split("---");
+          if (parts.length >= 3) {
+            const yamlData = parts[1];
+            const data = jsyaml.load(yamlData);
+
+            if (data && data.image) {
+              renderCard(
+                data.title || 'Untitled',
+                data.category || 'General',
+                data.image,
+                data.caption || '',
+                true
+              );
+            }
+          }
+        }
+      }
+    } catch (error) {
+      console.warn("Belum ada data foto baru dari CMS atau gagal memuat:", error);
+    }
   }
-}
 
-function closeModal() {
-  const modal = document.getElementById('lightbox-modal');
-  if (modal) {
-    modal.style.display = 'none';
+  // 3. Logika Filter Kategori Foto
+  if (filterButtons.length > 0) {
+    filterButtons.forEach(button => {
+      button.addEventListener("click", () => {
+        filterButtons.forEach(btn => btn.classList.remove("active"));
+        button.classList.add("active");
+
+        const filterValue = button.getAttribute("data-filter").toLowerCase().trim();
+        const items = document.querySelectorAll(".gallery-item");
+
+        items.forEach(item => {
+          const itemCategory = item.getAttribute("data-category");
+          if (filterValue === "all" || itemCategory === filterValue || itemCategory.includes(filterValue)) {
+            item.style.display = "block";
+          } else {
+            item.style.display = "none";
+          }
+        });
+      });
+    });
   }
-}
 
-document.addEventListener('DOMContentLoaded', fetchGalleryData);
+  // 4. Logika Lightbox / Pop-up Preview Gambar
+  function openLightbox(src, title, category, caption) {
+    const lightbox = document.getElementById("lightbox");
+    if (!lightbox) return;
+
+    const lightboxImg = lightbox.querySelector(".lightbox-img") || lightbox.querySelector("img");
+    const lightboxTitle = lightbox.querySelector(".lightbox-title") || lightbox.querySelector("h3");
+    const lightboxCaption = lightbox.querySelector(".lightbox-caption") || lightbox.querySelector("p");
+
+    if (lightboxImg) lightboxImg.src = src;
+    if (lightboxTitle) lightboxTitle.textContent = title;
+    if (lightboxCaption) lightboxCaption.textContent = caption || category;
+
+    lightbox.classList.add("active");
+    lightbox.style.display = "flex";
+  }
+
+  // Close Lightbox
+  const closeBtn = document.querySelector(".lightbox-close") || document.querySelector(".close");
+  const lightbox = document.getElementById("lightbox");
+
+  if (closeBtn && lightbox) {
+    closeBtn.addEventListener("click", () => {
+      lightbox.classList.remove("active");
+      lightbox.style.display = "none";
+    });
+
+    lightbox.addEventListener("click", (e) => {
+      if (e.target === lightbox) {
+        lightbox.classList.remove("active");
+        lightbox.style.display = "none";
+      }
+    });
+  }
+
+  // Jalankan pemuatan foto CMS
+  await loadCMSImages();
+});
