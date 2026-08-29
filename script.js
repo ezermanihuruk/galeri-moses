@@ -20,7 +20,7 @@ async function fetchCMSData() {
           const data = jsyaml.load(parts[1]);
           if (data && data.image) {
             cmsItems.push({
-              title: data.title || "Untitled",
+              title: data.title ? data.title.trim() : "", // Jika dikosongkan, string jadi "" (bukan "Untitled")
               category: data.category || "General",
               image: data.image,
               caption: data.caption || ""
@@ -38,20 +38,13 @@ async function fetchCMSData() {
 
 // Memuat data dari Decap CMS + Fallback Data Bawaan
 async function fetchGalleryData() {
-  const container = document.getElementById('gallery-grid');
-
-  // 1. Data Bawaan Awal (Tetap Menampilkan 6 Foto Utama Kamu)
   const defaultData = [
     
   ];
 
   try {
-    // 2. Ambil data baru dari CMS
     const cmsData = await fetchCMSData();
-
-    // 3. Gabungkan foto baru dari CMS di paling depan + foto bawaan kamu
     galleryData = [...cmsData, ...defaultData];
-
     renderGallery(galleryData);
   } catch (error) {
     console.log("Menggunakan data bawaan awal...", error);
@@ -71,13 +64,14 @@ function renderGallery(items) {
     card.className = 'gallery-card';
     card.onclick = () => openModal(item.image, item.title, item.caption);
 
+    // Jika title diisi, tampilkan elemen h4. Jika kosong, sembunyikan gallery-info agar bersih total.
+    const titleHTML = item.title ? `<div class="gallery-info"><h4>${item.title}</h4></div>` : '';
+
     card.innerHTML = `
       <div class="img-wrapper">
-        <img src="${item.image}" alt="${item.title}">
+        <img src="${item.image}" alt="${item.title || 'Foto Galeri'}">
       </div>
-      <div class="gallery-info">
-        <h4>${item.title}</h4>
-      </div>
+      ${titleHTML}
     `;
     container.appendChild(card);
   });
