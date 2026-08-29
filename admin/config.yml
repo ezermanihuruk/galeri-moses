@@ -2,7 +2,7 @@ backend:
   name: github
   repo: ezermanihuruk/galeri-moses
   branch: main
-  base_url: https://decap-oauth.vercel.app # Server OAuth gratis untuk Decap CMS di Vercel
+  base_url: https://decap-oauth.vercel.app
 
 media_folder: "images/uploads"
 public_folder: "/images/uploads"
@@ -14,7 +14,7 @@ collections:
     create: true
     slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
     fields:
-      - { label: "Judul Foto", name: "title", widget: "string" }
-      - { label: "Kategori", name: "category", widget: "select", options: ["Black and White", "Stage", "Sport", "Human", "Event", "Arsitektur"] }
-      - { label: "File Gambar", name: "image", widget: "image" }
-      - { label: "Caption / Deskripsi Foto", name: "caption", widget: "text" }
+      - { label: "Judul Foto", name: "title", widget: "string", required: false }
+      - { label: "Kategori", name: "category", widget: "select", options: ["Black and White", "Stage", "Sport", "Human", "Event", "Arsitektur"], required: true }
+      - { label: "File Gambar", name: "image", widget: "image", required: true }
+      - { label: "Caption / Deskripsi Foto", name: "caption", widget: "text", required: false }
