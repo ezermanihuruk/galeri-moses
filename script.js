@@ -42,42 +42,7 @@ async function fetchGalleryData() {
 
   // 1. Data Bawaan Awal (Tetap Menampilkan 6 Foto Utama Kamu)
   const defaultData = [
-    {
-      title: "Energi Panggung Konser",
-      category: "Stage",
-      image: "images/Stage/1.jpeg",
-      caption: "Pencahayaan panggung dengan kontras warna tinggi."
-    },
-    {
-      title: "Karakter Wajah & Emosi",
-      category: "Human",
-      image: "images/Human/1.jpeg",
-      caption: "Potret ekspresi autentik pencahayaan dramatis."
-    },
-    {
-      title: "Bayangan & Siluet B&W",
-      category: "Black and White",
-      image: "images/Black%20and%20White/1.jpeg",
-      caption: "Eksplorasi kontras gelap terang klasik."
-    },
-    {
-      title: "Aksi Kecepatan Lapangan",
-      category: "Sport",
-      image: "images/Sport/1.jpeg",
-      caption: "Membekukan gerakan dalam momen presisi tinggi."
-    },
-    {
-      title: "Momen Perayaan",
-      category: "Event",
-      image: "images/Event/1.jpeg",
-      caption: "Dokumentasi suasana dan kegembiraan acara."
-    },
-    {
-      title: "Simetri Ruang & Bangunan",
-      category: "Arsitektur",
-      image: "images/Arsitektur/1.jpeg",
-      caption: "Eksplorasi garis dan struktur arsitektur."
-    }
+    
   ];
 
   try {
