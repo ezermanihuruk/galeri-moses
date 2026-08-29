@@ -1,21 +1,11 @@
 /* ==========================================================================
-   GALERI MOSES - MODERN FORMAL STYLESHEET
+   GALERI MOSES - STYLESHEET
    ========================================================================== */
 
-/* Import Font Formal Modern (Plus Jakarta Sans & Inter) */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700&display=swap');
+/* Import Font Formal Modern */
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap');
 
-/* --- RESET & VARIABLES --- */
-:root {
-  --bg-color: #0d0d0d;
-  --card-bg: #171717;
-  --accent-color: #d4af37; /* Warna Emas Formal */
-  --text-main: #f5f5f5;
-  --text-muted: #a3a3a3;
-  --font-primary: 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  --transition: all 0.3s ease-in-out;
-}
-
+/* Reset & Basic Styling */
 * {
   margin: 0;
   padding: 0;
@@ -23,117 +13,106 @@
 }
 
 body {
-  background-color: var(--bg-color);
-  color: var(--text-main);
-  font-family: var(--font-primary);
+  background-color: #0d0d0d;
+  color: #ffffff;
+  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
   line-height: 1.6;
-  padding-bottom: 50px;
 }
 
-/* --- TYPOGRAPHY FORMAL & CLEAN --- */
+/* Memastikan seluruh teks dan judul memakai font formal yang sama */
 h1, h2, h3, h4, h5, h6, 
-.nav-links a, 
-.filter-btn, 
-.gallery-info h4, 
-.gallery-card h4,
-#modal-title,
-.modal-title {
-  font-family: var(--font-primary) !important;
-  font-weight: 600;
-  letter-spacing: 0.5px;
+p, span, a, button, input, 
+.nav-links, .filter-btn, .modal-title, #modal-title {
+  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
 }
 
-/* --- HEADER & NAVBAR --- */
-header {
-  padding: 40px 20px 20px;
-  text-align: center;
+/* Navigation & Layouts */
+ul, ol {
+  list-style: none;
 }
 
-header h1 {
-  font-size: 2.2rem;
-  color: var(--text-main);
-  margin-bottom: 10px;
-  text-transform: uppercase;
+a {
+  color: inherit;
+  text-decoration: none;
 }
 
-header p {
-  color: var(--text-muted);
-  font-size: 0.95rem;
-  font-weight: 300;
+/* Header & Navbar */
+header, nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 5%;
+  background-color: #121212;
 }
 
-/* --- FILTER BUTTONS --- */
-.filter-container {
+.nav-links {
+  display: flex;
+  gap: 20px;
+}
+
+.nav-links a:hover {
+  color: #d4af37;
+}
+
+/* Filter Section */
+.filter-container, .filters {
   display: flex;
   justify-content: center;
-  flex-wrap: wrap;
   gap: 10px;
-  margin: 30px 20px;
+  margin: 30px 0;
+  flex-wrap: wrap;
 }
 
 .filter-btn {
   background: transparent;
   border: 1px solid #333;
-  color: var(--text-muted);
-  padding: 8px 18px;
-  font-size: 0.85rem;
+  color: #ccc;
+  padding: 8px 16px;
   cursor: pointer;
-  transition: var(--transition);
   border-radius: 4px;
+  transition: all 0.3s ease;
 }
 
-.filter-btn:hover,
-.filter-btn.active {
-  background-color: var(--accent-color);
+.filter-btn.active, .filter-btn:hover {
+  background-color: #d4af37;
   color: #000;
-  border-color: var(--accent-color);
-  font-weight: 600;
+  border-color: #d4af37;
 }
 
-/* --- GALLERY GRID LAYOUT --- */
-#gallery-grid,
-.gallery-grid {
+/* Grid Layout */
+#gallery-grid, .gallery-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: 20px;
+  padding: 20px 5%;
   max-width: 1200px;
   margin: 0 auto;
-  padding: 0 20px;
 }
 
 .gallery-card {
-  background-color: var(--card-bg);
+  background: #171717;
   border-radius: 8px;
   overflow: hidden;
-  border: 1px solid #262626;
+  border: 1px solid #222;
   cursor: pointer;
-  transition: var(--transition);
-  display: flex;
-  flex-direction: column;
+  transition: transform 0.3s ease;
 }
 
 .gallery-card:hover {
   transform: translateY(-5px);
-  border-color: var(--accent-color);
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+  border-color: #d4af37;
 }
 
 .img-wrapper {
   width: 100%;
-  height: 250px;
+  height: 220px;
   overflow: hidden;
-  background-color: #000;
 }
 
 .img-wrapper img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 0.5s ease;
-}
-
-.gallery-card:hover .img-wrapper img {
-  transform: scale(1.05);
 }
 
 .gallery-info {
@@ -141,100 +120,41 @@ header p {
   text-align: center;
 }
 
-.gallery-info h4 {
-  font-size: 0.95rem;
-  color: var(--text-main);
-}
-
-/* --- MODAL / LIGHTBOX --- */
-.modal, 
-#lightbox-modal {
+/* Lightbox Modal */
+#lightbox-modal, .modal {
   display: none;
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.92);
-  z-index: 1000;
+  background: rgba(0,0,0,0.9);
   justify-content: center;
   align-items: center;
-  padding: 20px;
+  z-index: 1000;
 }
 
 .modal-content {
-  max-width: 800px;
-  width: 100%;
-  background-color: var(--card-bg);
-  border-radius: 8px;
-  overflow: hidden;
-  border: 1px solid #333;
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.modal-content img,
-#modal-img {
-  max-width: 100%;
-  max-height: 65vh;
-  object-fit: contain;
-  background-color: #000;
-}
-
-.modal-info {
+  background: #171717;
   padding: 20px;
+  border-radius: 8px;
+  max-width: 800px;
+  width: 90%;
   text-align: center;
-  width: 100%;
+  position: relative;
 }
 
-#modal-title,
-.modal-info h3 {
-  color: var(--accent-color);
-  margin-bottom: 8px;
-  font-size: 1.2rem;
-  font-family: var(--font-primary) !important;
+.modal-content img {
+  max-width: 100%;
+  max-height: 70vh;
+  object-fit: contain;
 }
 
-#modal-text,
-.modal-info p {
-  color: var(--text-muted);
-  font-size: 0.9rem;
-  font-weight: 400;
-}
-
-.close-btn,
-.close {
+.close, .close-btn {
   position: absolute;
-  top: 15px;
+  top: 10px;
   right: 20px;
-  color: var(--text-main);
-  font-size: 2rem;
-  font-weight: bold;
+  font-size: 28px;
   cursor: pointer;
-  transition: var(--transition);
-  z-index: 1001;
-}
-
-.close-btn:hover,
-.close:hover {
-  color: var(--accent-color);
-}
-
-/* --- RESPONSIVE MOBILE --- */
-@media (max-width: 768px) {
-  header h1 {
-    font-size: 1.8rem;
-  }
-
-  #gallery-grid,
-  .gallery-grid {
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 15px;
-  }
-
-  .img-wrapper {
-    height: 200px;
-  }
+  color: #fff;
 }
