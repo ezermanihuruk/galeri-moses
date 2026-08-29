@@ -1,9 +1,9 @@
 /* ==========================================================================
-   GALERI MOSES - DARK LUXURY STYLESHEET
+   GALERI MOSES - MODERN FORMAL STYLESHEET
    ========================================================================== */
 
-/* Import Font Formal dari Google Fonts */
-@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Montserrat:wght@300;400;500;600&display=swap');
+/* Import Font Formal Modern (Plus Jakarta Sans & Inter) */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700&display=swap');
 
 /* --- RESET & VARIABLES --- */
 :root {
@@ -12,8 +12,7 @@
   --accent-color: #d4af37; /* Warna Emas Formal */
   --text-main: #f5f5f5;
   --text-muted: #a3a3a3;
-  --font-title: 'Cinzel', serif;
-  --font-body: 'Montserrat', sans-serif;
+  --font-primary: 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   --transition: all 0.3s ease-in-out;
 }
 
@@ -26,19 +25,22 @@
 body {
   background-color: var(--bg-color);
   color: var(--text-main);
-  font-family: var(--font-body);
+  font-family: var(--font-primary);
   line-height: 1.6;
   padding-bottom: 50px;
 }
 
-/* --- TYPOGRAPHY FORMAL --- */
+/* --- TYPOGRAPHY FORMAL & CLEAN --- */
 h1, h2, h3, h4, h5, h6, 
 .nav-links a, 
 .filter-btn, 
 .gallery-info h4, 
+.gallery-card h4,
+#modal-title,
 .modal-title {
-  font-family: var(--font-title);
-  letter-spacing: 1px;
+  font-family: var(--font-primary) !important;
+  font-weight: 600;
+  letter-spacing: 0.5px;
 }
 
 /* --- HEADER & NAVBAR --- */
@@ -48,7 +50,7 @@ header {
 }
 
 header h1 {
-  font-size: 2.5rem;
+  font-size: 2.2rem;
   color: var(--text-main);
   margin-bottom: 10px;
   text-transform: uppercase;
@@ -56,7 +58,7 @@ header h1 {
 
 header p {
   color: var(--text-muted);
-  font-size: 1rem;
+  font-size: 0.95rem;
   font-weight: 300;
 }
 
@@ -65,7 +67,7 @@ header p {
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
-  gap: 12px;
+  gap: 10px;
   margin: 30px 20px;
 }
 
@@ -140,20 +142,20 @@ header p {
 }
 
 .gallery-info h4 {
-  font-size: 1rem;
+  font-size: 0.95rem;
   color: var(--text-main);
-  font-weight: 500;
 }
 
 /* --- MODAL / LIGHTBOX --- */
-.modal {
+.modal, 
+#lightbox-modal {
   display: none;
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.9);
+  background-color: rgba(0, 0, 0, 0.92);
   z-index: 1000;
   justify-content: center;
   align-items: center;
@@ -161,7 +163,7 @@ header p {
 }
 
 .modal-content {
-  max-width: 900px;
+  max-width: 800px;
   width: 100%;
   background-color: var(--card-bg);
   border-radius: 8px;
@@ -173,9 +175,10 @@ header p {
   align-items: center;
 }
 
-.modal-content img {
+.modal-content img,
+#modal-img {
   max-width: 100%;
-  max-height: 70vh;
+  max-height: 65vh;
   object-fit: contain;
   background-color: #000;
 }
@@ -186,18 +189,23 @@ header p {
   width: 100%;
 }
 
+#modal-title,
 .modal-info h3 {
   color: var(--accent-color);
   margin-bottom: 8px;
   font-size: 1.2rem;
+  font-family: var(--font-primary) !important;
 }
 
+#modal-text,
 .modal-info p {
   color: var(--text-muted);
   font-size: 0.9rem;
+  font-weight: 400;
 }
 
-.close-btn {
+.close-btn,
+.close {
   position: absolute;
   top: 15px;
   right: 20px;
@@ -206,9 +214,11 @@ header p {
   font-weight: bold;
   cursor: pointer;
   transition: var(--transition);
+  z-index: 1001;
 }
 
-.close-btn:hover {
+.close-btn:hover,
+.close:hover {
   color: var(--accent-color);
 }
 
