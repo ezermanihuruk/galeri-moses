@@ -1,7 +1,6 @@
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
 /* ==========================================================================
-   PHOTOOLOGY + VIUFINDER DARK LUXURY RESPONSIVE DESIGN SYSTEM
-   Palette: Deep Black, Charcoal, Warm Gold, Orange Accent, Pure White
+   PHOTOOLOGY + VIUFINDER DARK LUXURY RESPONSIVE DESIGN SYSTEM (OPTIMIZED)
+   Font TIDAK lagi di-@import di sini. Pasang <link> di <head> HTML (lihat catatan).
    ========================================================================== */
 
 :root {
@@ -12,9 +11,9 @@
   --text-muted: #A0A0A0;
   --accent-gold: #C09A6B;
   --accent-orange: #FF8C00;
-  
-  --font-title: 'Playfair Display', serif;
-  --font-sans: 'Inter', sans-serif;
+
+  --font-title: 'Playfair Display', Georgia, serif;
+  --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, 'Segoe UI', Arial, sans-serif;
 }
 
 * {
@@ -30,8 +29,13 @@ html {
 body {
   background-color: var(--bg-black);
   color: var(--text-main);
-  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-family: var(--font-sans);
   line-height: 1.6;
+}
+
+img {
+  max-width: 100%;
+  display: block;
 }
 
 /* NAVBAR DARK */
@@ -40,12 +44,19 @@ body {
   justify-content: space-between;
   align-items: center;
   padding: 20px 8%;
-  background: rgba(13, 13, 13, 0.95);
-  backdrop-filter: blur(10px);
+  background: rgba(13, 13, 13, 0.97);
   border-bottom: 1px solid var(--border-dark);
   position: sticky;
   top: 0;
   z-index: 1000;
+}
+
+/* blur hanya di layar besar (blur berat di HP) */
+@media (min-width: 769px) {
+  .navbar {
+    background: rgba(13, 13, 13, 0.92);
+    backdrop-filter: blur(8px);
+  }
 }
 
 .logo {
@@ -81,7 +92,15 @@ body {
   position: relative;
   width: 100%;
   height: 85vh;
-  background: url('images/home.jpeg') no-repeat center center/cover;
+  background-color: #111; /* warna placeholder selama gambar loading */
+  background-image: url('images/home.jpeg'); /* fallback */
+  background-image: image-set(
+    url('images/home.webp') type('image/webp'),
+    url('images/home.jpeg') type('image/jpeg')
+  );
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -91,10 +110,7 @@ body {
 
 .hero-overlay {
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+  inset: 0;
   background: rgba(13, 13, 13, 0.75);
   z-index: 1;
 }
@@ -139,7 +155,7 @@ body {
   align-items: center;
   gap: 8px;
   box-shadow: 0 4px 15px rgba(0,0,0,0.5);
-  transition: transform 0.3s, background 0.3s;
+  transition: transform 0.3s, background-color 0.3s;
 }
 
 .floating-btn:hover {
@@ -150,6 +166,12 @@ body {
 /* SECTIONS GENERAL */
 .section {
   padding: 80px 8%;
+}
+
+/* section di bawah layar pertama: render ditunda sampai mendekati viewport */
+.section:not(:first-of-type) {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 700px;
 }
 
 .section-title {
@@ -189,7 +211,8 @@ body {
 .about-img-wrapper {
   flex-shrink: 0;
   width: 260px;
-  height: 360px;
+  aspect-ratio: 13 / 18; /* sama dengan 260x360, mencegah layout loncat */
+  background: #111;
   border: 1px solid var(--accent-orange);
   overflow: hidden;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6);
@@ -199,12 +222,7 @@ body {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  display: block;
   transition: transform 0.5s ease;
-}
-
-.about-img-wrapper:hover img {
-  transform: scale(1.05);
 }
 
 .about-text {
@@ -248,7 +266,7 @@ body {
   text-transform: uppercase;
   text-decoration: none;
   border-radius: 4px;
-  transition: all 0.3s ease;
+  transition: transform 0.3s, box-shadow 0.3s, opacity 0.3s, background-color 0.3s;
   flex: 1;
   min-width: 200px;
 }
@@ -329,7 +347,7 @@ body {
   letter-spacing: 2px;
   text-transform: uppercase;
   cursor: pointer;
-  transition: background 0.3s;
+  transition: background-color 0.3s;
 }
 
 .contact-form button:hover {
@@ -354,7 +372,7 @@ body {
   text-transform: uppercase;
   letter-spacing: 1px;
   cursor: pointer;
-  transition: all 0.3s;
+  transition: background-color 0.3s, color 0.3s, border-color 0.3s;
 }
 
 .filter-btn:hover,
@@ -377,19 +395,16 @@ body {
   padding: 15px;
   transition: transform 0.4s, box-shadow 0.4s, border-color 0.4s;
   cursor: pointer;
-}
-
-.gallery-card:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5);
-  border-color: var(--accent-orange);
+  /* browser hanya render kartu yang mendekati layar */
+  content-visibility: auto;
+  contain-intrinsic-size: auto 380px;
 }
 
 .img-wrapper {
   width: 100%;
   height: 280px;
   overflow: hidden;
-  background: #000000;
+  background: #111; /* placeholder sebelum foto muncul */
 }
 
 .gallery-card img {
@@ -397,10 +412,6 @@ body {
   height: 100%;
   object-fit: cover;
   transition: transform 0.5s;
-}
-
-.gallery-card:hover img {
-  transform: scale(1.05);
 }
 
 .gallery-info {
@@ -414,16 +425,29 @@ body {
   color: var(--text-main);
 }
 
-/* MODAL LIGHTBOX DARK */
+/* hover hanya di perangkat yang punya mouse (hemat di HP) */
+@media (hover: hover) {
+  .about-img-wrapper:hover img {
+    transform: scale(1.05);
+  }
+
+  .gallery-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5);
+    border-color: var(--accent-orange);
+  }
+
+  .gallery-card:hover img {
+    transform: scale(1.05);
+  }
+}
+
+/* MODAL LIGHTBOX DARK (tanpa backdrop-filter, sangat berat saat render) */
 .modal {
   display: none;
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.95);
-  backdrop-filter: blur(8px);
+  inset: 0;
+  background: rgba(0, 0, 0, 0.96);
   z-index: 2000;
   justify-content: center;
   align-items: center;
@@ -462,6 +486,7 @@ body {
   color: var(--text-main);
   font-size: 3rem;
   cursor: pointer;
+  transition: color 0.3s;
 }
 
 .close-btn:hover {
@@ -504,6 +529,12 @@ body {
   .hero-photoology {
     height: 70vh;
     padding: 0 15px;
+    /* versi gambar lebih kecil untuk HP (buat file ini, ~800px lebar) */
+    background-image: url('images/home-mobile.jpeg');
+    background-image: image-set(
+      url('images/home-mobile.webp') type('image/webp'),
+      url('images/home-mobile.jpeg') type('image/jpeg')
+    );
   }
 
   .hero-content h1 {
@@ -539,7 +570,6 @@ body {
 
   .about-img-wrapper {
     width: 200px;
-    height: 280px;
   }
 
   .about-text {
@@ -599,5 +629,16 @@ body {
     top: 15px;
     right: 20px;
     font-size: 2.5rem;
+  }
+}
+
+/* hormati pengguna yang mematikan animasi */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *, *::before, *::after {
+    transition-duration: 0.01ms !important;
   }
 }
