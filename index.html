@@ -4,13 +4,26 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Galeri Moses</title>
-  <link rel="stylesheet" href="style.css">
   <link rel="icon" type="image/png" href="favicon.png">
-  <!-- Font Google Premium -->
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <!-- Netlify Identity Widget -->
-  <script src="https://cdn.jsdelivr.net/npm/js-yaml@4.1.0/dist/js-yaml.min.js"></script>
-  <script src="script.js"></script>
+
+  <!-- Koneksi awal ke server font (hemat waktu handshake) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <!-- Preload gambar hero (elemen terbesar di layar pertama).
+       Buat file home.webp (desktop) dan home-mobile.webp (HP) -->
+  <link rel="preload" as="image" href="images/home-mobile.webp" type="image/webp" media="(max-width: 768px)">
+  <link rel="preload" as="image" href="images/home.webp" type="image/webp" media="(min-width: 769px)">
+
+  <link rel="stylesheet" href="style.css">
+
+  <!-- Font: hanya weight yang dipakai di CSS -->
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <!-- Semua script pakai defer: tidak memblokir render, urutan tetap terjaga -->
+  <script defer src="https://cdn.jsdelivr.net/npm/js-yaml@4.1.0/dist/js-yaml.min.js"></script>
+  <script defer src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+  <script defer src="script.js"></script>
 </head>
 <body>
 
@@ -47,7 +60,7 @@
     </div>
     <div class="about-card">
       <div class="about-img-wrapper">
-        <img src="images/aboutme.jpeg" alt="Moses Juneri Manihuruk">
+        <img src="images/aboutme.webp" alt="Moses Juneri Manihuruk" width="520" height="720" loading="lazy" decoding="async">
       </div>
       <div class="about-text">
         <p>Saya Moses Juneri Manihuruk, fotografer asal Jambi. Berawal dari hobi, fotografi jadi cara saya menangkap berbagai cerita dan emosi yang sering terlewat di sekitar kita.</p>
@@ -113,7 +126,7 @@
   <!-- Modal Lightbox Pop-up -->
   <div id="lightbox-modal" class="modal" onclick="closeModal()">
     <span class="close-btn">&times;</span>
-    <img id="modal-img" class="modal-img" src="" alt="">
+    <img id="modal-img" class="modal-img" src="" alt="" decoding="async">
     <div class="modal-caption">
       <h3 id="modal-title"></h3>
       <p id="modal-text"></p>
@@ -125,18 +138,20 @@
     <p>&copy; 2026 <strong>Galeri Moses</strong>. All Rights Reserved. Designed by Moses Juneri Manihuruk.</p>
   </footer>
 
-  <!-- Script Netlify Identity Redirect (Penting untuk Login Admin) -->
+  <!-- Netlify Identity Redirect (untuk login admin).
+       Dijalankan setelah halaman siap, karena widget dimuat dengan defer. -->
   <script>
-    if (window.netlifyIdentity) {
-      window.netlifyIdentity.on("init", user => {
-        if (!user) {
-          window.netlifyIdentity.on("login", () => {
-            document.location.href = "/admin/";
-          });
-        }
-      });
-    }
+    document.addEventListener("DOMContentLoaded", function () {
+      if (window.netlifyIdentity) {
+        window.netlifyIdentity.on("init", function (user) {
+          if (!user) {
+            window.netlifyIdentity.on("login", function () {
+              document.location.href = "/admin/";
+            });
+          }
+        });
+      }
+    });
   </script>
-  <script src="script.js"></script>
 </body>
 </html>
