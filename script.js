@@ -1,35 +1,43 @@
 let galleryData = [];
 
-// Fungsi tambahan: Mengambil file Markdown baru dari Decap CMS via GitHub API
+// Fungsi Mengambil File Markdown dari Decap CMS via GitHub API (Di-fetch Paralel dengan Promise.all)
 async function fetchCMSData() {
   try {
     const res = await fetch("https://api.github.com/repos/ezermanihuruk/galeri-moses/contents/content/gallery");
     if (!res.ok) return [];
 
     const files = await res.json();
-    const cmsItems = [];
+    const mdFiles = files.filter(file => file.name && file.name.endsWith(".md"));
 
-    for (const file of files) {
-      if (file.name && file.name.endsWith(".md")) {
-        const fileRes = await fetch(file.download_url);
-        const text = await fileRes.text();
+    // Fetch semua isi file markdown secara PARALEL (jauh lebih cepat)
+    const cmsItems = await Promise.all(
+      mdFiles.map(async (file) => {
+        try {
+          const fileRes = await fetch(file.download_url);
+          const text = await fileRes.text();
 
-        // Parsing Frontmatter YAML di dalam file .md
-        const parts = text.split("---");
-        if (parts.length >= 3 && typeof jsyaml !== "undefined") {
-          const data = jsyaml.load(parts[1]);
-          if (data && data.image) {
-            cmsItems.push({
-              title: data.title ? data.title.trim() : "", // Jika dikosongkan, string jadi "" (bukan "Untitled")
-              category: data.category || "General",
-              image: data.image,
-              caption: data.caption || ""
-            });
+          // Parsing Frontmatter YAML
+          const parts = text.split("---");
+          if (parts.length >= 3 && typeof jsyaml !== "undefined") {
+            const data = jsyaml.load(parts[1]);
+            if (data && data.image) {
+              return {
+                title: data.title ? data.title.trim() : "",
+                category: data.category || "General",
+                image: data.image,
+                caption: data.caption || ""
+              };
+            }
           }
+        } catch (err) {
+          console.warn("Gagal memuat file:", file.name, err);
         }
-      }
-    }
-    return cmsItems;
+        return null;
+      })
+    );
+
+    // Filter file yang gagal / null
+    return cmsItems.filter(item => item !== null);
   } catch (err) {
     console.log("CMS belum memiliki foto baru atau offline, menggunakan data lokal.", err);
     return [];
@@ -38,9 +46,7 @@ async function fetchCMSData() {
 
 // Memuat data dari Decap CMS + Fallback Data Bawaan
 async function fetchGalleryData() {
-  const defaultData = [
-    
-  ];
+  const defaultData = [];
 
   try {
     const cmsData = await fetchCMSData();
@@ -56,7 +62,7 @@ async function fetchGalleryData() {
 function renderGallery(items) {
   const container = document.getElementById('gallery-grid');
   if (!container) return;
-  
+
   container.innerHTML = '';
 
   items.forEach(item => {
@@ -64,12 +70,12 @@ function renderGallery(items) {
     card.className = 'gallery-card';
     card.onclick = () => openModal(item.image, item.title, item.caption);
 
-    // Jika title diisi, tampilkan elemen h4. Jika kosong, sembunyikan gallery-info agar bersih total.
     const titleHTML = item.title ? `<div class="gallery-info"><h4>${item.title}</h4></div>` : '';
 
+    // TAMBAHAN: loading="lazy" dan decoding="async" untuk menghemat bandwidth awal
     card.innerHTML = `
       <div class="img-wrapper">
-        <img src="${item.image}" alt="${item.title || 'Foto Galeri'}">
+        <img src="${item.image}" alt="${item.title || 'Foto Galeri'}" loading="lazy" decoding="async" width="400" height="280">
       </div>
       ${titleHTML}
     `;
@@ -82,8 +88,8 @@ function filterCategory(category) {
   buttons.forEach(btn => {
     const btnText = btn.innerText.toLowerCase();
     const catText = category.toLowerCase();
-    
-    if(btnText === catText || (category === 'all' && btnText === 'semua') || (catText === 'black and white' && btnText === 'black & white')) {
+
+    if (btnText === catText || (category === 'all' && btnText === 'semua') || (catText === 'black and white' && btnText === 'black & white')) {
       btn.classList.add('active');
     } else {
       btn.classList.remove('active');
