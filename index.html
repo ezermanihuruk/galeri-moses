@@ -6,24 +6,19 @@
   <title>Galeri Moses</title>
   <link rel="icon" type="image/png" href="favicon.png">
 
-  <!-- Koneksi awal ke server font (hemat waktu handshake) -->
+  <!-- 1. Preconnect ke Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-  <!-- Preload gambar hero (elemen terbesar di layar pertama).
-       Buat file home.webp (desktop) dan home-mobile.webp (HP) -->
+  <!-- 2. Preload PRIORITAS TINGGI untuk Foto Hero & Foto Profil Tentag Saya -->
   <link rel="preload" as="image" href="images/home-mobile.webp" type="image/webp" media="(max-width: 768px)">
   <link rel="preload" as="image" href="images/home.webp" type="image/webp" media="(min-width: 769px)">
+  <link rel="preload" as="image" href="images/aboutme.webp" type="image/webp">
 
   <link rel="stylesheet" href="style.css">
 
-  <!-- Font: hanya weight yang dipakai di CSS -->
+  <!-- Font -->
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" rel="stylesheet">
-
-  <!-- Semua script pakai defer: tidak memblokir render, urutan tetap terjaga -->
-  <script defer src="https://cdn.jsdelivr.net/npm/js-yaml@4.1.0/dist/js-yaml.min.js"></script>
-  <script defer src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
-  <script defer src="script.js"></script>
 </head>
 <body>
 
@@ -45,14 +40,13 @@
       <h1>Moses Juneri Manihuruk</h1>
       <p class="hero-subtitle">Portofolio Fotografi Digital Profesional</p>
     </div>
-    <!-- Floating Contact Button -->
     <a href="#contact" class="floating-btn">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 9h12v2H6V9zm8 5H6v-2h8v2zm4-6H6V6h12v2z"/></svg>
       Hubungi Kami...
     </a>
   </section>
 
-  <!-- Section About -->
+  <!-- Section About (FOTO PROFIL) -->
   <section id="about" class="section">
     <div class="section-title">
       <span>PROFIL FOTOGRAFER</span>
@@ -60,7 +54,8 @@
     </div>
     <div class="about-card">
       <div class="about-img-wrapper">
-        <img src="images/aboutme.webp" alt="Moses Juneri Manihuruk" width="520" height="720" loading="lazy" decoding="async">
+        <!-- DIUBAH: Hapus loading="lazy", tambah fetchpriority="high" & decoding="sync" -->
+        <img src="images/aboutme.webp" alt="Moses Juneri Manihuruk" width="520" height="720" fetchpriority="high" decoding="sync">
       </div>
       <div class="about-text">
         <p>Saya Moses Juneri Manihuruk, fotografer asal Jambi. Berawal dari hobi, fotografi jadi cara saya menangkap berbagai cerita dan emosi yang sering terlewat di sekitar kita.</p>
@@ -77,7 +72,6 @@
       <h2>Galeri Foto</h2>
     </div>
 
-    <!-- Category Filters -->
     <div class="category-filter">
       <button class="filter-btn active" onclick="filterCategory('all')">Semua</button>
       <button class="filter-btn" onclick="filterCategory('Black and White')">Black &amp; White</button>
@@ -88,7 +82,6 @@
       <button class="filter-btn" onclick="filterCategory('Arsitektur')">Street</button>
     </div>
 
-    <!-- Gallery Grid -->
     <div id="gallery-grid" class="gallery-grid">
       <!-- Data foto otomatis di-render oleh script.js -->
     </div>
@@ -138,8 +131,11 @@
     <p>&copy; 2026 <strong>Galeri Moses</strong>. All Rights Reserved. Designed by Moses Juneri Manihuruk.</p>
   </footer>
 
-  <!-- Netlify Identity Redirect (untuk login admin).
-       Dijalankan setelah halaman siap, karena widget dimuat dengan defer. -->
+  <!-- DIUBAH: Pindahkan JS eksternal & Admin ke PALING BAWAH halaman -->
+  <script src="https://cdn.jsdelivr.net/npm/js-yaml@4.1.0/dist/js-yaml.min.js" defer></script>
+  <script src="https://identity.netlify.com/v1/netlify-identity-widget.js" defer></script>
+  <script src="script.js" defer></script>
+
   <script>
     document.addEventListener("DOMContentLoaded", function () {
       if (window.netlifyIdentity) {
