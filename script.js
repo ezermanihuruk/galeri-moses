@@ -1,695 +1,508 @@
-/* ==========================================================================
-   GALERI MOSES
-   GALLERY JAVASCRIPT
-   ========================================================================== */
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
 
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-/* ==========================================================================
-   GLOBAL DATA
-   ========================================================================== */
+  <title>Galeri Moses | Portofolio Fotografi</title>
 
-let galleryData = [];
+  <link rel="icon" type="image/png" href="favicon.png">
 
+  <!-- ================================
+       PRECONNECT
+       ================================ -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-/* ==========================================================================
-   FETCH CMS DATA
-   ========================================================================== */
+  <!-- ================================
+       PRELOAD FOTO HERO
+       ================================ -->
 
-async function fetchCMSData() {
+  <link
+    rel="preload"
+    as="image"
+    href="images/home.webp"
+    type="image/webp"
+    media="(min-width: 769px)"
+    fetchpriority="high"
+  >
 
-  try {
+  <link
+    rel="preload"
+    as="image"
+    href="images/home-mobile.webp"
+    type="image/webp"
+    media="(max-width: 768px)"
+    fetchpriority="high"
+  >
 
-    const response = await fetch(
-      "https://api.github.com/repos/ezermanihuruk/galeri-moses/contents/content/gallery",
-      {
-        headers: {
-          "Accept": "application/vnd.github+json"
-        }
-      }
-    );
+  <!-- ================================
+       PRELOAD FOTO ABOUT
+       ================================ -->
 
+  <link
+    rel="preload"
+    as="image"
+    href="images/aboutme.webp"
+    type="image/webp"
+    fetchpriority="high"
+  >
 
-    /* Jika GitHub API gagal */
+  <!-- CSS -->
+  <link rel="stylesheet" href="style.css">
 
-    if (!response.ok) {
+  <!-- ================================
+       GOOGLE FONT
+       ================================ -->
 
-      console.warn(
-        "GitHub API gagal:",
-        response.status
-      );
+  <link
+    href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap"
+    rel="stylesheet"
+  >
+</head>
 
-      return [];
+<body>
 
-    }
+  <!-- =====================================================
+       NAVBAR
+       ===================================================== -->
 
+  <header class="navbar">
 
-    const files = await response.json();
+    <div class="logo">
+      GALERI MOSES
+    </div>
 
+    <ul class="nav-links">
 
-    /* Pastikan response berupa array */
+      <li>
+        <a href="#home">Home</a>
+      </li>
 
-    if (!Array.isArray(files)) {
+      <li>
+        <a href="#about">Tentang Saya</a>
+      </li>
 
-      return [];
+      <li>
+        <a href="#gallery">Galeri</a>
+      </li>
 
-    }
+      <li>
+        <a href="#contact">Contact Me</a>
+      </li>
 
+    </ul>
 
-    /* Ambil hanya file Markdown */
+  </header>
 
-    const mdFiles = files.filter(
-      file =>
-        file &&
-        file.name &&
-        file.name.endsWith(".md")
-    );
 
+  <!-- =====================================================
+       HERO
+       ===================================================== -->
 
-    /* =========================================================
-       FETCH FILE MARKDOWN SECARA PARALEL
-       ========================================================= */
+  <section id="home" class="hero-photoology">
 
-    const cmsItems = await Promise.all(
+    <div class="hero-overlay"></div>
 
-      mdFiles.map(
-        async function (file) {
+    <div class="hero-content">
 
-          try {
+      <h1>
+        Moses Juneri Manihuruk
+      </h1>
 
-            if (!file.download_url) {
+      <p class="hero-subtitle">
+        Portofolio Fotografi Digital Profesional
+      </p>
 
-              return null;
+    </div>
 
-            }
 
+    <!-- FLOATING BUTTON -->
 
-            const fileResponse =
-              await fetch(file.download_url);
+    <a href="#contact" class="floating-btn">
 
+      <svg
+        width="20"
+        height="20"
+        viewBox="0 0 24 24"
+        fill="currentColor"
+        aria-hidden="true"
+      >
+        <path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 9h12v2H6V9zm8 5H6v-2h8v2zm4-6H6V6h12v2z"/>
+      </svg>
 
-            if (!fileResponse.ok) {
+      Hubungi Kami...
 
-              console.warn(
-                "Gagal mengambil:",
-                file.name
-              );
+    </a>
 
-              return null;
+  </section>
 
-            }
 
+  <!-- =====================================================
+       ABOUT
+       ===================================================== -->
 
-            const text =
-              await fileResponse.text();
+  <section id="about" class="section">
 
+    <div class="section-title">
 
-            /* =================================================
-               PARSING FRONTMATTER
-               ================================================= */
+      <span>
+        PROFIL FOTOGRAFER
+      </span>
 
-            const parts =
-              text.split("---");
+      <h2>
+        Tentang Saya
+      </h2>
 
+    </div>
 
-            if (
-              parts.length >= 3 &&
-              typeof jsyaml !== "undefined"
-            ) {
 
-              const data =
-                jsyaml.load(parts[1]);
+    <div class="about-card">
 
 
-              if (
-                data &&
-                data.image
-              ) {
+      <!-- FOTO -->
 
-                return {
+      <div class="about-img-wrapper">
 
-                  title:
-                    data.title
-                      ? String(data.title).trim()
-                      : "",
-
-                  category:
-                    data.category
-                      ? String(data.category)
-                      : "General",
-
-                  image:
-                    String(data.image),
-
-                  caption:
-                    data.caption
-                      ? String(data.caption)
-                      : ""
-
-                };
-
-              }
-
-            }
-
-          }
-          catch (error) {
-
-            console.warn(
-              "Gagal memuat file:",
-              file.name,
-              error
-            );
-
-          }
-
-
-          return null;
-
-        }
-      )
-
-    );
-
-
-    /* Hapus item yang gagal */
-
-    return cmsItems.filter(
-      item => item !== null
-    );
-
-  }
-  catch (error) {
-
-    console.error(
-      "Gagal mengambil data CMS:",
-      error
-    );
-
-    return [];
-
-  }
-
-}
-
-
-/* ==========================================================================
-   FETCH GALLERY
-   ========================================================================== */
-
-async function fetchGalleryData() {
-
-  const defaultData = [];
-
-
-  try {
-
-    const cmsData =
-      await fetchCMSData();
-
-
-    galleryData =
-      [
-        ...cmsData,
-        ...defaultData
-      ];
-
-
-    renderGallery(
-      galleryData
-    );
-
-  }
-  catch (error) {
-
-    console.error(
-      "Gallery error:",
-      error
-    );
-
-
-    galleryData =
-      defaultData;
-
-
-    renderGallery(
-      galleryData
-    );
-
-  }
-
-}
-
-
-/* ==========================================================================
-   RENDER GALLERY
-   ========================================================================== */
-
-function renderGallery(items) {
-
-  const container =
-    document.getElementById(
-      "gallery-grid"
-    );
-
-
-  if (!container) {
-
-    return;
-
-  }
-
-
-  /* Bersihkan container */
-
-  container.innerHTML = "";
-
-
-  /* Jika tidak ada foto */
-
-  if (
-    !items ||
-    items.length === 0
-  ) {
-
-    container.innerHTML = `
-
-      <div class="gallery-loading">
-
-        Belum ada foto yang tersedia.
+        <img
+          id="about-photo"
+          src="images/aboutme.webp"
+          alt="Moses Juneri Manihuruk"
+          width="520"
+          height="720"
+          loading="eager"
+          fetchpriority="high"
+          decoding="async"
+        >
 
       </div>
 
-    `;
 
-    return;
+      <!-- TEXT -->
 
-  }
+      <div class="about-text">
 
+        <p>
+          Saya Moses Juneri Manihuruk, fotografer asal Jambi.
+          Berawal dari hobi, fotografi jadi cara saya menangkap
+          berbagai cerita dan emosi yang sering terlewat di sekitar kita.
+        </p>
 
-  /* =========================================================
-     RENDER SETIAP FOTO
-     ========================================================= */
+        <br>
 
-  items.forEach(
-    function (item) {
+        <p>
+          Lewat setiap bidikan, saya ingin mengajak kita semua melihat
+          keindahan dari sudut pandang yang berbeda, menjadikan momen
+          biasa sebagai cerita yang berkesan.
+        </p>
 
-      const card =
-        document.createElement(
-          "div"
-        );
+      </div>
 
+    </div>
 
-      card.className =
-        "gallery-card";
-
-
-      /* =======================================================
-         CLICK CARD
-         ======================================================= */
-
-      card.addEventListener(
-        "click",
-        function () {
-
-          openModal(
-            item.image,
-            item.title,
-            item.caption
-          );
-
-        }
-      );
+  </section>
 
 
-      /* =======================================================
-         TITLE
-         ======================================================= */
+  <!-- =====================================================
+       GALERI
+       ===================================================== -->
 
-      const titleHTML =
-        item.title
+  <section id="gallery" class="section">
 
-          ? `
-            <div class="gallery-info">
+    <div class="section-title">
 
-              <h4>
-                ${escapeHTML(item.title)}
-              </h4>
+      <span>
+        KARYA TERPILIH
+      </span>
 
-            </div>
-          `
+      <h2>
+        Galeri Foto
+      </h2>
 
-          : "";
+    </div>
 
 
-      /* =======================================================
-         CARD HTML
-         ======================================================= */
+    <!-- FILTER -->
 
-      card.innerHTML = `
+    <div class="category-filter">
 
-        <div class="img-wrapper">
+      <button
+        class="filter-btn active"
+        onclick="filterCategory('all')"
+      >
+        Semua
+      </button>
 
-          <img
-            src="${escapeHTML(item.image)}"
-            alt="${escapeHTML(
-              item.title || "Foto Galeri"
-            )}"
-            loading="lazy"
-            decoding="async"
-            width="400"
-            height="280"
+      <button
+        class="filter-btn"
+        onclick="filterCategory('Black and White')"
+      >
+        Black &amp; White
+      </button>
+
+      <button
+        class="filter-btn"
+        onclick="filterCategory('Stage')"
+      >
+        Stage
+      </button>
+
+      <button
+        class="filter-btn"
+        onclick="filterCategory('Sport')"
+      >
+        Sport
+      </button>
+
+      <button
+        class="filter-btn"
+        onclick="filterCategory('Human')"
+      >
+        Fashion
+      </button>
+
+      <button
+        class="filter-btn"
+        onclick="filterCategory('Event')"
+      >
+        Event
+      </button>
+
+      <button
+        class="filter-btn"
+        onclick="filterCategory('Arsitektur')"
+      >
+        Street
+      </button>
+
+    </div>
+
+
+    <!-- GALLERY GRID -->
+
+    <div
+      id="gallery-grid"
+      class="gallery-grid"
+    ></div>
+
+  </section>
+
+
+  <!-- =====================================================
+       CONTACT
+       ===================================================== -->
+
+  <section id="contact" class="section">
+
+    <div class="section-title">
+
+      <span>
+        MARI BEKERJA SAMA
+      </span>
+
+      <h2>
+        Contact Me
+      </h2>
+
+    </div>
+
+
+    <div class="contact-card">
+
+
+      <!-- SOCIAL -->
+
+      <div class="social-contact-wrapper">
+
+
+        <!-- WHATSAPP -->
+
+        <a
+          href="https://wa.me/6281272683815"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="social-btn wa-btn"
+        >
+
+          <svg
+            width="22"
+            height="22"
+            viewBox="0 0 24 24"
+            fill="currentColor"
+            aria-hidden="true"
           >
+            <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/>
+          </svg>
 
-        </div>
+          Chat via WhatsApp
 
-        ${titleHTML}
-
-      `;
-
-
-      container.appendChild(
-        card
-      );
-
-    }
-  );
-
-}
+        </a>
 
 
-/* ==========================================================================
-   ESCAPE HTML
-   Mencegah karakter tertentu merusak HTML
-   ========================================================================== */
+        <!-- INSTAGRAM -->
 
-function escapeHTML(value) {
+        <a
+          href="https://instagram.com/mosesjuneri"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="social-btn ig-btn"
+        >
 
-  return String(value)
+          <svg
+            width="22"
+            height="22"
+            viewBox="0 0 24 24"
+            fill="currentColor"
+            aria-hidden="true"
+          >
+            <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-3.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.227.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.07 4.849-.07zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618-6.979-6.98-.059-1.28-.073-1.689-.073-4.948 0-3.259.014-3.667.072-4.947.196-4.354 2.617-6.78 6.979-6.98 1.281-.059 1.69-.073 4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+          </svg>
 
-    .replace(
-      /&/g,
-      "&amp;"
-    )
+          Follow Instagram
 
-    .replace(
-      /</g,
-      "&lt;"
-    )
+        </a>
 
-    .replace(
-      />/g,
-      "&gt;"
-    )
-
-    .replace(
-      /"/g,
-      "&quot;"
-    )
-
-    .replace(
-      /'/g,
-      "&#039;"
-    );
-
-}
+      </div>
 
 
-/* ==========================================================================
-   FILTER CATEGORY
-   ========================================================================== */
-
-function filterCategory(category) {
-
-  const buttons =
-    document.querySelectorAll(
-      ".filter-btn"
-    );
+      <div class="divider">
+        <span>ATAU KIRIM PESAN</span>
+      </div>
 
 
-  /* =========================================================
-     UPDATE ACTIVE BUTTON
-     ========================================================= */
+      <!-- CONTACT FORM -->
 
-  buttons.forEach(
-    function (button) {
+      <form
+        class="contact-form"
+        onsubmit="alert('Pesan terkirim!'); return false;"
+      >
 
-      const buttonText =
-        button.innerText
-          .toLowerCase()
-          .trim();
+        <input
+          type="text"
+          placeholder="Nama Lengkap"
+          required
+        >
+
+        <input
+          type="email"
+          placeholder="Alamat Email"
+          required
+        >
+
+        <textarea
+          rows="5"
+          placeholder="Tuliskan pesan atau tawaran proyek..."
+          required
+        ></textarea>
+
+        <button type="submit">
+          KIRIM PESAN
+        </button>
+
+      </form>
+
+    </div>
+
+  </section>
 
 
-      const categoryText =
-        category
-          .toLowerCase()
-          .trim();
+  <!-- =====================================================
+       LIGHTBOX
+       ===================================================== -->
+
+  <div
+    id="lightbox-modal"
+    class="modal"
+    onclick="closeModal()"
+  >
+
+    <span class="close-btn">
+      &times;
+    </span>
+
+    <img
+      id="modal-img"
+      class="modal-img"
+      src=""
+      alt=""
+      decoding="async"
+    >
+
+    <div class="modal-caption">
+
+      <h3 id="modal-title"></h3>
+
+      <p id="modal-text"></p>
+
+    </div>
+
+  </div>
 
 
-      let active = false;
+  <!-- =====================================================
+       FOOTER
+       ===================================================== -->
+
+  <footer class="footer">
+
+    <p>
+      &copy; 2026
+      <strong>Galeri Moses</strong>.
+      All Rights Reserved.
+      Designed by Moses Juneri Manihuruk.
+    </p>
+
+  </footer>
 
 
-      if (
-        category === "all" &&
-        buttonText === "semua"
-      ) {
+  <!-- =====================================================
+       JAVASCRIPT
+       ===================================================== -->
 
-        active = true;
+  <script
+    src="https://cdn.jsdelivr.net/npm/js-yaml@4.1.0/dist/js-yaml.min.js"
+    defer
+  ></script>
+
+  <script
+    src="https://identity.netlify.com/v1/netlify-identity-widget.js"
+    defer
+  ></script>
+
+  <script
+    src="script.js"
+    defer
+  ></script>
+
+
+  <!-- NETLIFY IDENTITY -->
+
+  <script>
+
+    document.addEventListener("DOMContentLoaded", function () {
+
+      if (window.netlifyIdentity) {
+
+        window.netlifyIdentity.on("init", function (user) {
+
+          if (!user) {
+
+            window.netlifyIdentity.on("login", function () {
+
+              document.location.href = "/admin/";
+
+            });
+
+          }
+
+        });
 
       }
 
+    });
 
-      else if (
-        buttonText === categoryText
-      ) {
+  </script>
 
-        active = true;
-
-      }
-
-
-      else if (
-        categoryText === "black and white" &&
-        buttonText === "black & white"
-      ) {
-
-        active = true;
-
-      }
-
-
-      button.classList.toggle(
-        "active",
-        active
-      );
-
-    }
-  );
-
-
-  /* =========================================================
-     FILTER DATA
-     ========================================================= */
-
-  if (
-    category === "all"
-  ) {
-
-    renderGallery(
-      galleryData
-    );
-
-    return;
-
-  }
-
-
-  const filtered =
-    galleryData.filter(
-      function (item) {
-
-        return (
-          item.category &&
-          item.category
-            .toLowerCase()
-            .trim() ===
-          category
-            .toLowerCase()
-            .trim()
-        );
-
-      }
-    );
-
-
-  renderGallery(
-    filtered
-  );
-
-}
-
-
-/* ==========================================================================
-   OPEN MODAL
-   ========================================================================== */
-
-function openModal(
-  src,
-  title,
-  caption
-) {
-
-  const modal =
-    document.getElementById(
-      "lightbox-modal"
-    );
-
-
-  const modalImg =
-    document.getElementById(
-      "modal-img"
-    );
-
-
-  const modalTitle =
-    document.getElementById(
-      "modal-title"
-    );
-
-
-  const modalText =
-    document.getElementById(
-      "modal-text"
-    );
-
-
-  if (
-    !modal ||
-    !modalImg
-  ) {
-
-    return;
-
-  }
-
-
-  /* Set gambar */
-
-  modalImg.src = src;
-
-
-  modalImg.alt =
-    title || "Foto Galeri";
-
-
-  /* Set judul */
-
-  if (modalTitle) {
-
-    modalTitle.innerText =
-      title || "";
-
-  }
-
-
-  /* Set caption */
-
-  if (modalText) {
-
-    modalText.innerText =
-      caption || "";
-
-  }
-
-
-  /* Tampilkan modal */
-
-  modal.style.display =
-    "flex";
-
-
-  /* Lock scroll */
-
-  document.body.style.overflow =
-    "hidden";
-
-}
-
-
-/* ==========================================================================
-   CLOSE MODAL
-   ========================================================================== */
-
-function closeModal(event) {
-
-  /*
-    Jika klik gambar, jangan tutup modal.
-  */
-
-  if (
-    event &&
-    event.target &&
-    event.target.id === "modal-img"
-  ) {
-
-    return;
-
-  }
-
-
-  const modal =
-    document.getElementById(
-      "lightbox-modal"
-    );
-
-
-  if (!modal) {
-
-    return;
-
-  }
-
-
-  modal.style.display =
-    "none";
-
-
-  /* Kembalikan scroll */
-
-  document.body.style.overflow =
-    "";
-
-}
-
-
-/* ==========================================================================
-   ESC KEY UNTUK MENUTUP MODAL
-   ========================================================================== */
-
-document.addEventListener(
-  "keydown",
-  function (event) {
-
-    if (
-      event.key === "Escape"
-    ) {
-
-      closeModal();
-
-    }
-
-  }
-);
-
-
-/* ==========================================================================
-   LOAD GALLERY
-   ========================================================================== */
-
-document.addEventListener(
-  "DOMContentLoaded",
-  function () {
-
-    fetchGalleryData();
-
-  }
-);
+</body>
+</html>
