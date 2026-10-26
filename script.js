@@ -20,8 +20,7 @@ if (parts.length >= 3 && typeof jsyaml !== "undefined") {
 const data = jsyaml.load(parts[1]);
 if (data && data.image) {
 cmsItems.push({
-              title: data.title || "Untitled",
-              title: data.title ? data.title.trim() : "", // Jika dikosongkan, string jadi "" (bukan "Untitled")
+title: data.title ? data.title.trim() : "", // Jika kosong, string jadi ""
 category: data.category || "General",
 image: data.image,
 caption: data.caption || ""
@@ -39,18 +38,15 @@ return [];
 
 // Memuat data dari Decap CMS + Fallback Data Bawaan
 async function fetchGalleryData() {
-  const container = document.getElementById('gallery-grid');
-
-  // 1. Data Bawaan Awal (Tetap Menampilkan 6 Foto Utama Kamu)
+// 1. Data Bawaan Awal (Opsional, silakan diisi jika ada foto statis)
 const defaultData = [
-
 ];
 
 try {
-    // 2. Ambil data baru dari CMS
+// 2. Ambil data baru dari CMS
 const cmsData = await fetchCMSData();
 
-    // 3. Gabungkan foto baru dari CMS di paling depan + foto bawaan kamu
+// 3. Gabungkan foto baru dari CMS di paling depan + foto bawaan
 galleryData = [...cmsData, ...defaultData];
 
 renderGallery(galleryData);
@@ -72,19 +68,15 @@ const card = document.createElement('div');
 card.className = 'gallery-card';
 card.onclick = () => openModal(item.image, item.title, item.caption);
 
-    // Jika title diisi, tampilkan elemen h4. Jika kosong, sembunyikan gallery-info agar bersih total.
-    const titleHTML = item.title ? `<div class="gallery-info"><h4>${item.title}</h4></div>` : '';
+// Jika title diisi, tampilkan elemen h4. Jika kosong, sembunyikan info agar bersih total.
+const titleHTML = item.title ? `<div class="gallery-info"><h4>${item.title}</h4></div>` : '';
 
 card.innerHTML = `
-     <div class="img-wrapper">
-        <img src="${item.image}" alt="${item.title}">
-      </div>
-      <div class="gallery-info">
-        <h4>${item.title}</h4>
-        <img src="${item.image}" alt="${item.title || 'Foto Galeri'}">
-     </div>
-      ${titleHTML}
-   `;
+   <div class="img-wrapper">
+      <img src="${item.image}" alt="${item.title || 'Foto Galeri'}">
+   </div>
+   ${titleHTML}
+`;
 container.appendChild(card);
 });
 }
