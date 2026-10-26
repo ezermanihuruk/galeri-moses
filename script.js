@@ -1,126 +1,157 @@
-document.addEventListener("DOMContentLoaded", function () {
-  // Data cadangan (fallback) agar galeri langsung muncul tanpa blank
-  const fallbackGallery = [
+let galleryData = [];
+
+// Fungsi tambahan: Mengambil file Markdown baru dari Decap CMS via GitHub API
+async function fetchCMSData() {
+  try {
+    const res = await fetch("https://api.github.com/repos/ezermanihuruk/galeri-moses/contents/content/gallery");
+    if (!res.ok) return [];
+
+    const files = await res.json();
+    const cmsItems = [];
+
+    for (const file of files) {
+      if (file.name && file.name.endsWith(".md")) {
+        const fileRes = await fetch(file.download_url);
+        const text = await fileRes.text();
+
+        // Parsing Frontmatter YAML di dalam file .md
+        const parts = text.split("---");
+        if (parts.length >= 3 && typeof jsyaml !== "undefined") {
+          const data = jsyaml.load(parts[1]);
+          if (data && data.image) {
+            cmsItems.push({
+              title: data.title ? data.title.trim() : "", // Jika dikosongkan, string jadi "" (bukan "Untitled")
+              category: data.category || "General",
+              image: data.image,
+              caption: data.caption || ""
+            });
+          }
+        }
+      }
+    }
+    return cmsItems;
+  } catch (err) {
+    console.log("CMS belum memiliki foto baru atau offline, menggunakan data lokal.", err);
+    return [];
+  }
+}
+
+// Memuat data dari Decap CMS + Fallback Data Bawaan
+async function fetchGalleryData() {
+  const defaultData = [
     {
-      title: "Monochrome Portrait",
-      category: "Black and White",
-      image: "images/gallery-1.webp",
-      desc: "Eksplorasi kontras dan ekspresi dalam balutan warna hitam putih."
-    },
-    {
-      title: "Live Stage Performance",
+      title: "Energi Panggung Konser",
       category: "Stage",
-      image: "images/gallery-2.webp",
-      desc: "Menangkap energi dan pencahayaan panggung yang dinamis."
+      image: "images/Stage/1.jpeg",
+      caption: "Pencahayaan panggung dengan kontras warna tinggi."
     },
     {
-      title: "Action Sport Shot",
-      category: "Sport",
-      image: "images/gallery-3.webp",
-      desc: "Momen cepat penuh ketegangan dalam dunia olahraga."
-    },
-    {
-      title: "Urban Fashion Style",
+      title: "Karakter Wajah & Emosi",
       category: "Human",
-      image: "images/gallery-4.webp",
-      desc: "Gaya busana jalanan dengan estetika modern."
+      image: "images/Human/1.jpeg",
+      caption: "Potret ekspresi autentik pencahayaan dramatis."
     },
     {
-      title: "Cultural Event Moments",
+      title: "Bayangan & Siluet B&W",
+      category: "Black and White",
+      image: "images/Black%20and%20White/1.jpeg",
+      caption: "Eksplorasi kontras gelap terang klasik."
+    },
+    {
+      title: "Aksi Kecepatan Lapangan",
+      category: "Sport",
+      image: "images/Sport/1.jpeg",
+      caption: "Membekukan gerakan dalam momen presisi tinggi."
+    },
+    {
+      title: "Momen Perayaan",
       category: "Event",
-      image: "images/gallery-5.webp",
-      desc: "Dokumentasi acara dan interaksi manusia yang autentik."
+      image: "images/Event/1.jpeg",
+      caption: "Dokumentasi suasana dan kegembiraan acara."
     },
     {
-      title: "Street Architecture",
+      title: "Simetri Ruang & Bangunan",
       category: "Arsitektur",
-      image: "images/gallery-6.webp",
-      desc: "Garis dan sudut bangunan kota dari sudut pandang unik."
+      image: "images/Arsitektur/1.jpeg",
+      caption: "Eksplorasi garis dan struktur arsitektur."
     }
   ];
 
-  let allGalleryItems = [...fallbackGallery];
-  const gridContainer = document.getElementById("gallery-grid");
-
-  // Fungsi untuk merender grid galeri ke HTML
-  function renderGallery(items) {
-    if (!gridContainer) return;
-    
-    gridContainer.innerHTML = "";
-
-    if (items.length === 0) {
-      gridContainer.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: #777;">Belum ada foto dalam kategori ini.</p>';
-      return;
-    }
-
-    items.forEach((item) => {
-      const card = document.createElement("div");
-      card.className = "gallery-card";
-      card.setAttribute("data-category", item.category);
-
-      card.innerHTML = `
-        <div class="img-wrapper">
-          <img src="${item.image}" alt="${item.title}" loading="lazy" decoding="async">
-        </div>
-        <div class="gallery-info">
-          <h4>${item.title}</h4>
-        </div>
-      `;
-
-      // Event klik untuk membuka modal Lightbox
-      card.addEventListener("click", function () {
-        openModal(item.image, item.title, item.desc || item.title);
-      });
-
-      gridContainer.appendChild(card);
-    });
+  try {
+    const cmsData = await fetchCMSData();
+    galleryData = [...cmsData, ...defaultData];
+    renderGallery(galleryData);
+  } catch (error) {
+    console.log("Menggunakan data bawaan awal...", error);
+    galleryData = defaultData;
+    renderGallery(galleryData);
   }
+}
 
-  // Render awal menampilkan semua data
-  renderGallery(allGalleryItems);
+function renderGallery(items) {
+  const container = document.getElementById('gallery-grid');
+  if (!container) return;
+  
+  container.innerHTML = '';
 
-  // Fungsi Filter Kategori yang terhubung dengan tombol HTML Anda
-  window.filterCategory = function (category) {
-    const buttons = document.querySelectorAll(".filter-btn");
+  items.forEach(item => {
+    const card = document.createElement('div');
+    card.className = 'gallery-card';
+    card.onclick = () => openModal(item.image, item.title, item.caption);
+
+    // Jika title diisi, tampilkan elemen h4. Jika kosong, sembunyikan gallery-info agar bersih total.
+    const titleHTML = item.title ? `<div class="gallery-info"><h4>${item.title}</h4></div>` : '';
+
+    card.innerHTML = `
+      <div class="img-wrapper">
+        <img src="${item.image}" alt="${item.title || 'Foto Galeri'}">
+      </div>
+      ${titleHTML}
+    `;
+    container.appendChild(card);
+  });
+}
+
+function filterCategory(category) {
+  const buttons = document.querySelectorAll('.filter-btn');
+  buttons.forEach(btn => {
+    const btnText = btn.innerText.toLowerCase();
+    const catText = category.toLowerCase();
     
-    // Perbarui kelas active pada tombol
-    buttons.forEach((btn) => {
-      const onclickAttr = btn.getAttribute("onclick") || "";
-      if (onclickAttr.includes(`'${category}'`) || onclickAttr.includes(`"${category}"`)) {
-        btn.classList.add("active");
-      } else {
-        btn.classList.remove("active");
-      }
-    });
-
-    // Filter berdasarkan kategori
-    if (category === "all") {
-      renderGallery(allGalleryItems);
+    if(btnText === catText || (category === 'all' && btnText === 'semua') || (catText === 'black and white' && btnText === 'black & white')) {
+      btn.classList.add('active');
     } else {
-      const filtered = allGalleryItems.filter((item) => item.category.toLowerCase() === category.toLowerCase());
-      renderGallery(filtered);
+      btn.classList.remove('active');
     }
-  };
+  });
 
-  // Fungsi Lightbox Modal
-  window.openModal = function (imgSrc, title, desc) {
-    const modal = document.getElementById("lightbox-modal");
-    const modalImg = document.getElementById("modal-img");
-    const modalTitle = document.getElementById("modal-title");
-    const modalText = document.getElementById("modal-text");
+  if (category === 'all') {
+    renderGallery(galleryData);
+  } else {
+    const filtered = galleryData.filter(item => item.category.toLowerCase() === category.toLowerCase());
+    renderGallery(filtered);
+  }
+}
 
-    if (modal && modalImg) {
-      modalImg.src = imgSrc;
-      if (modalTitle) modalTitle.textContent = title;
-      if (modalText) modalText.textContent = desc;
-      modal.style.display = "flex";
-    }
-  };
+function openModal(src, title, caption) {
+  const modalImg = document.getElementById('modal-img');
+  const modalTitle = document.getElementById('modal-title');
+  const modalText = document.getElementById('modal-text');
+  const modal = document.getElementById('lightbox-modal');
 
-  window.closeModal = function () {
-    const modal = document.getElementById("lightbox-modal");
-    if (modal) {
-      modal.style.display = "none";
-    }
-  };
-});
+  if (modalImg && modal) {
+    modalImg.src = src;
+    modalTitle.innerText = title || '';
+    modalText.innerText = caption || '';
+    modal.style.display = 'flex';
+  }
+}
+
+function closeModal() {
+  const modal = document.getElementById('lightbox-modal');
+  if (modal) {
+    modal.style.display = 'none';
+  }
+}
+
+document.addEventListener('DOMContentLoaded', fetchGalleryData);
