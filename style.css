@@ -1,32 +1,34 @@
 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
-/* ==========================================================================
-   PHOTOOLOGY + VIUFINDER DARK LUXURY RESPONSIVE DESIGN SYSTEM
-   Palette: Deep Black, Charcoal, Warm Gold, Orange Accent, Pure White
-   PHOTOOLOGY + VIUFINDER DARK LUXURY RESPONSIVE DESIGN SYSTEM (OPTIMIZED)
-   Font TIDAK lagi di-@import di sini. Pasang <link> di <head> HTML (lihat catatan).
-  ========================================================================== */
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap');
 
 :root {
-@@ -12,9 +11,9 @@
---text-muted: #A0A0A0;
---accent-gold: #C09A6B;
---accent-orange: #FF8C00;
+  --bg-black: #0d0d0d;
+  --bg-card: #161616;
+  --text-main: #F5F5F5;
+  --text-muted: #A0A0A0;
+  --accent-gold: #C09A6B;
+  --accent-orange: #FF8C00;
+  --border-dark: #222222;
   
-  --font-title: 'Playfair Display', serif;
-  --font-sans: 'Inter', sans-serif;
-
   --font-title: 'Playfair Display', Georgia, serif;
   --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, 'Segoe UI', Arial, sans-serif;
 }
 
 * {
-@@ -30,24 +29,36 @@ html {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
 body {
-background-color: var(--bg-black);
-color: var(--text-main);
-  font-family: 'Plus Jakarta Sans', sans-serif;
+  background-color: var(--bg-black);
+  color: var(--text-main);
   font-family: var(--font-sans);
-line-height: 1.6;
+  line-height: 1.6;
 }
 
 img {
@@ -36,20 +38,17 @@ img {
 
 /* NAVBAR DARK */
 .navbar {
-display: flex;
-justify-content: space-between;
-align-items: center;
-padding: 20px 8%;
-  background: rgba(13, 13, 13, 0.95);
-  backdrop-filter: blur(10px);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 8%;
   background: rgba(13, 13, 13, 0.97);
-border-bottom: 1px solid var(--border-dark);
-position: sticky;
-top: 0;
-z-index: 1000;
+  border-bottom: 1px solid var(--border-dark);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
 }
 
-/* blur hanya di layar besar (blur berat di HP) */
 @media (min-width: 769px) {
   .navbar {
     background: rgba(13, 13, 13, 0.92);
@@ -58,224 +57,400 @@ z-index: 1000;
 }
 
 .logo {
-font-family: var(--font-title);
-font-size: 1.6rem;
-@@ -81,7 +92,15 @@ body {
-position: relative;
-width: 100%;
-height: 85vh;
-  background: url('images/home.jpeg') no-repeat center center/cover;
-  background-color: #111; /* warna placeholder selama gambar loading */
-  background-image: url('images/home.jpeg'); /* fallback */
-  background-image: image-set(
-    url('images/home.webp') type('image/webp'),
-    url('images/home.jpeg') type('image/jpeg')
-  );
+  font-family: var(--font-title);
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--text-main);
+  letter-spacing: 1px;
+}
+
+.nav-links {
+  list-style: none;
+  display: flex;
+  gap: 30px;
+}
+
+.nav-links a {
+  text-decoration: none;
+  color: var(--text-muted);
+  font-weight: 500;
+  transition: color 0.3s;
+}
+
+.nav-links a:hover {
+  color: var(--accent-orange);
+}
+
+/* HERO SECTION */
+.hero-photoology {
+  position: relative;
+  width: 100%;
+  height: 85vh;
+  background-color: #111;
+  background-image: url('images/home.jpeg');
   background-repeat: no-repeat;
   background-position: center;
   background-size: cover;
-display: flex;
-align-items: center;
-justify-content: center;
-@@ -91,10 +110,7 @@ body {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
 
 .hero-overlay {
-position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+  position: absolute;
   inset: 0;
-background: rgba(13, 13, 13, 0.75);
-z-index: 1;
+  background: rgba(13, 13, 13, 0.75);
+  z-index: 1;
 }
-@@ -139,7 +155,7 @@ body {
-align-items: center;
-gap: 8px;
-box-shadow: 0 4px 15px rgba(0,0,0,0.5);
-  transition: transform 0.3s, background 0.3s;
+
+.hero-content {
+  position: relative;
+  z-index: 2;
+  max-width: 800px;
+  padding: 0 20px;
+}
+
+.hero-content h1 {
+  font-family: var(--font-title);
+  font-size: 3.5rem;
+  margin-bottom: 15px;
+  color: var(--text-main);
+}
+
+.hero-subtitle {
+  font-size: 1.2rem;
+  color: var(--text-muted);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.floating-btn {
+  position: absolute;
+  bottom: 30px;
+  right: 30px;
+  z-index: 3;
+  background: var(--accent-orange);
+  color: #fff;
+  padding: 12px 20px;
+  border-radius: 30px;
+  text-decoration: none;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.5);
   transition: transform 0.3s, background-color 0.3s;
 }
 
 .floating-btn:hover {
-@@ -152,6 +168,12 @@ body {
-padding: 80px 8%;
+  transform: translateY(-3px);
+  background: #e07b00;
 }
 
-/* section di bawah layar pertama: render ditunda sampai mendekati viewport */
+/* SECTION GENERAL */
+.section {
+  padding: 80px 8%;
+}
+
 .section:not(:first-of-type) {
   content-visibility: auto;
   contain-intrinsic-size: auto 700px;
 }
 
 .section-title {
-text-align: center;
-margin-bottom: 40px;
-@@ -189,7 +211,8 @@ body {
-.about-img-wrapper {
-flex-shrink: 0;
-width: 260px;
-  height: 360px;
-  aspect-ratio: 13 / 18; /* sama dengan 260x360, mencegah layout loncat */
-  background: #111;
-border: 1px solid var(--accent-orange);
-overflow: hidden;
-box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6);
-@@ -199,14 +222,9 @@ body {
-width: 100%;
-height: 100%;
-object-fit: cover;
-  display: block;
-transition: transform 0.5s ease;
+  text-align: center;
+  margin-bottom: 40px;
 }
 
-.about-img-wrapper:hover img {
-  transform: scale(1.05);
+.section-title span {
+  font-size: 0.9rem;
+  color: var(--accent-orange);
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
+}
+
+.section-title h2 {
+  font-family: var(--font-title);
+  font-size: 2.5rem;
+  color: var(--text-main);
+}
+
+/* ABOUT SECTION */
+.about-card {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 50px;
+  align-items: center;
+  background: var(--bg-card);
+  padding: 40px;
+  border: 1px solid var(--border-dark);
+  border-radius: 8px;
+}
+
+.about-img-wrapper {
+  flex-shrink: 0;
+  width: 260px;
+  aspect-ratio: 13 / 18;
+  background: #111;
+  border: 1px solid var(--accent-orange);
+  overflow: hidden;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6);
+}
+
+.about-img-wrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
 }
 
 .about-text {
-text-align: left;
-}
-@@ -248,7 +266,7 @@ body {
-text-transform: uppercase;
-text-decoration: none;
-border-radius: 4px;
-  transition: all 0.3s ease;
-  transition: transform 0.3s, box-shadow 0.3s, opacity 0.3s, background-color 0.3s;
-flex: 1;
-min-width: 200px;
-}
-@@ -329,7 +347,7 @@ body {
-letter-spacing: 2px;
-text-transform: uppercase;
-cursor: pointer;
-  transition: background 0.3s;
-  transition: background-color 0.3s;
+  text-align: left;
+  flex: 1;
 }
 
-.contact-form button:hover {
-@@ -354,7 +372,7 @@ body {
-text-transform: uppercase;
-letter-spacing: 1px;
-cursor: pointer;
-  transition: all 0.3s;
+.about-text p {
+  margin-bottom: 15px;
+  color: var(--text-muted);
+}
+
+/* GALLERY SECTION */
+.category-filter {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 40px;
+}
+
+.filter-btn {
+  background: var(--bg-card);
+  border: 1px solid var(--border-dark);
+  color: var(--text-muted);
+  padding: 10px 20px;
+  border-radius: 30px;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  cursor: pointer;
   transition: background-color 0.3s, color 0.3s, border-color 0.3s;
 }
 
 .filter-btn:hover,
-@@ -377,19 +395,16 @@ body {
-padding: 15px;
-transition: transform 0.4s, box-shadow 0.4s, border-color 0.4s;
-cursor: pointer;
+.filter-btn.active {
+  background: var(--accent-orange);
+  color: #fff;
+  border-color: var(--accent-orange);
 }
 
-.gallery-card:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5);
-  border-color: var(--accent-orange);
-  /* browser hanya render kartu yang mendekati layar */
-  content-visibility: auto;
-  contain-intrinsic-size: auto 380px;
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 30px;
+}
+
+.gallery-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-dark);
+  border-radius: 6px;
+  overflow: hidden;
+  padding: 15px;
+  transition: transform 0.4s, box-shadow 0.4s, border-color 0.4s;
+  cursor: pointer;
 }
 
 .img-wrapper {
-width: 100%;
-height: 280px;
-overflow: hidden;
-  background: #000000;
-  background: #111; /* placeholder sebelum foto muncul */
+  width: 100%;
+  height: 280px;
+  overflow: hidden;
+  background: #111;
 }
 
 .gallery-card img {
-@@ -399,10 +414,6 @@ body {
-transition: transform 0.5s;
-}
-
-.gallery-card:hover img {
-  transform: scale(1.05);
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s;
 }
 
 .gallery-info {
-padding-top: 15px;
-text-align: center;
-@@ -414,16 +425,29 @@ body {
-color: var(--text-main);
+  padding-top: 15px;
+  text-align: center;
 }
 
-/* MODAL LIGHTBOX DARK */
-/* hover hanya di perangkat yang punya mouse (hemat di HP) */
+.gallery-info h4 {
+  font-family: var(--font-title);
+  font-size: 1.2rem;
+  color: var(--text-main);
+}
+
 @media (hover: hover) {
   .about-img-wrapper:hover img {
     transform: scale(1.05);
   }
-
   .gallery-card:hover {
     transform: translateY(-8px);
     box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5);
     border-color: var(--accent-orange);
   }
-
   .gallery-card:hover img {
     transform: scale(1.05);
   }
 }
 
-/* MODAL LIGHTBOX DARK (tanpa backdrop-filter, sangat berat saat render) */
+/* MODAL LIGHTBOX */
 .modal {
-display: none;
-position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.95);
-  backdrop-filter: blur(8px);
+  display: none;
+  position: fixed;
   inset: 0;
   background: rgba(0, 0, 0, 0.96);
-z-index: 2000;
-justify-content: center;
-align-items: center;
-@@ -462,6 +486,7 @@ body {
-color: var(--text-main);
-font-size: 3rem;
-cursor: pointer;
+  z-index: 2000;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  padding: 20px;
+}
+
+.modal-img {
+  max-width: 90%;
+  max-height: 75vh;
+  object-fit: contain;
+  border: 1px solid var(--border-dark);
+}
+
+.modal-caption {
+  text-align: center;
+  margin-top: 15px;
+  color: var(--text-main);
+}
+
+.modal-caption h3 {
+  font-family: var(--font-title);
+  font-size: 1.5rem;
+  margin-bottom: 5px;
+}
+
+.modal-caption p {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+}
+
+.close-btn {
+  position: absolute;
+  top: 20px;
+  right: 30px;
+  color: var(--text-main);
+  font-size: 3rem;
+  cursor: pointer;
   transition: color 0.3s;
 }
 
 .close-btn:hover {
-@@ -504,6 +529,12 @@ body {
-.hero-photoology {
-height: 70vh;
-padding: 0 15px;
-    /* versi gambar lebih kecil untuk HP (buat file ini, ~800px lebar) */
-    background-image: url('images/home-mobile.jpeg');
-    background-image: image-set(
-      url('images/home-mobile.webp') type('image/webp'),
-      url('images/home-mobile.jpeg') type('image/jpeg')
-    );
+  color: var(--accent-orange);
 }
 
-.hero-content h1 {
-@@ -539,7 +570,6 @@ body {
-
-.about-img-wrapper {
-width: 200px;
-    height: 280px;
+/* CONTACT SECTION */
+.contact-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-dark);
+  padding: 40px;
+  border-radius: 8px;
+  max-width: 700px;
+  margin: 0 auto;
 }
 
-.about-text {
-@@ -601,3 +631,14 @@ body {
-font-size: 2.5rem;
-}
+.social-contact-wrapper {
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
+  margin-bottom: 30px;
 }
 
-/* hormati pengguna yang mematikan animasi */
-@media (prefers-reduced-motion: reduce) {
-  html {
-    scroll-behavior: auto;
-  }
+.social-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 12px 20px;
+  background: #222;
+  color: var(--text-main);
+  text-transform: uppercase;
+  text-decoration: none;
+  border-radius: 4px;
+  transition: transform 0.3s, box-shadow 0.3s, opacity 0.3s, background-color 0.3s;
+  flex: 1;
+  min-width: 200px;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
 
-  *, *::before, *::after {
-    transition-duration: 0.01ms !important;
-  }
+.wa-btn:hover { background: #25D366; color: #fff; }
+.ig-btn:hover { background: #E1306C; color: #fff; }
+
+.divider {
+  text-align: center;
+  border-bottom: 1px solid var(--border-dark);
+  line-height: 0.1em;
+  margin: 30px 0;
+}
+
+.divider span {
+  background: var(--bg-card);
+  padding: 0 15px;
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  letter-spacing: 2px;
+}
+
+.contact-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.contact-form input,
+.contact-form textarea {
+  width: 100%;
+  padding: 14px;
+  background: var(--bg-black);
+  border: 1px solid var(--border-dark);
+  color: var(--text-main);
+  border-radius: 4px;
+  font-family: var(--font-sans);
+}
+
+.contact-form input:focus,
+.contact-form textarea:focus {
+  outline: none;
+  border-color: var(--accent-orange);
+}
+
+.contact-form button {
+  background: var(--accent-orange);
+  color: #fff;
+  padding: 14px;
+  border: none;
+  border-radius: 4px;
+  font-weight: bold;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.contact-form button:hover {
+  background: #e07b00;
+}
+
+/* FOOTER */
+.footer {
+  text-align: center;
+  padding: 30px 20px;
+  border-top: 1px solid var(--border-dark);
+  color: var(--text-muted);
+  font-size: 0.9rem;
 }
